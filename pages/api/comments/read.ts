@@ -33,18 +33,24 @@ export default async function handler(
       const comments1: CustomComment[] = [];
 
       for (const c of comments) {
-        const c1: CustomComment = c as CustomComment;
+        // Assuming CustomComment extends Comment with additional properties
+        const c1: CustomComment = {
+          ...c,
+          username: "",
+          userType: "",
+          isEditable: false,
+        };
+
         const u = await getUserById(c.authorId);
         c1.username = u ? u.fullName : "";
         c1.userType = u ? u.userType : "";
+
         const address = session?.address;
         if (address) {
           const u = await getUserByAddress(address);
-          if (u) c1.isEditable = c1.authorId === u.id;
-          else c1.isEditable = false;
-        } else {
-          c1.isEditable = false;
+          c1.isEditable = c1.authorId === (u?.id ?? "");
         }
+
         comments1.push(c1);
       }
 
