@@ -30,7 +30,10 @@ export function SignMessage() {
     event.preventDefault();
     const formData = new FormData(event.target as HTMLFormElement);
     const message = formData.get("message") as SignableMessage;
-    signMessage({ message });
+    signMessage({
+      message,
+      account: null
+    });
   };
 
   return (
