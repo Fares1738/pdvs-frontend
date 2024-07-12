@@ -11,7 +11,10 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 
 # Install dependencies, ignoring errors
-RUN npm cache clean --force && npm install --legacy-peer-deps --ignore-errors
+RUN npm cache clean --force && npm install --legacy-peer-deps --ignore-scripts --ignore-optional --no-audit --no-fund --no-progress --no-save --no-package-lock --no-bin-links || \
+    ((if [ -f npm-debug.log ]; then \
+    cat npm-debug.log; \
+    fi) && false)
 
 # Copy the rest of your application code
 COPY . .
