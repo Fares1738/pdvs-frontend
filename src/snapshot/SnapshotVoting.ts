@@ -17,15 +17,15 @@ export class SnapshotVoting {
   ) {
     const web3 = new Web3Provider(this.provider);
 
-    return await client.vote(web3, account, {
-      space: spaceName,
+    return await client.vote(web3, account, spaceName, {
       proposal: proposalHex,
       choice,
-      reason: message,
-      app: appName,
-      type: "single-choice",
+      metadata: { reason: message, app: appName, type: "single-choice" },
     });
   }
+
+
+
 
   async propose({
     title,
@@ -43,21 +43,19 @@ export class SnapshotVoting {
     snapshotBlockHeight: number;
   }) {
     const web3 = new Web3Provider(this.provider);
-    console.log("times", startTime, Math.floor(startTime + 60 * 60 * 24 * 7));
-    const receipt = await client.proposal(web3, account, {
-      space: spaceName,
-      title: title,
+  
+    const receipt = await client.proposal(web3, account, spaceName, {
+      name: title,
       body: body,
-      discussion: discussionLink,
-      start: startTime,
-      end: Math.floor(startTime + 60 * 60 * 24 * 7), // hardcoded 1 week
-      snapshot: snapshotBlockHeight,
-      plugins: JSON.stringify({}),
-      app: appName, // provide the name of your project which is using this snapshot.js integration
-      type: "single-choice", // define the voting system
       choices: ["In Favor", "Against", "Abstain"],
+      start: startTime,
+      end: startTime + 60 * 60 * 24 * 7, // Adjusted to use a direct calculation
+      snapshot: snapshotBlockHeight,
+      type: "single-choice",
+      metadata: { discussion: discussionLink, plugins: JSON.stringify({}), app: appName },
     });
-
+  
     return receipt;
   }
+  
 }

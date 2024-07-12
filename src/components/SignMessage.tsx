@@ -3,7 +3,6 @@ import { useSignMessage } from "wagmi";
 import { recoverMessageAddress, SignableMessage } from "viem";
 
 export function SignMessage() {
-  //   const recoveredAddress = React.useRef<string>();
   const {
     data: signMessageData,
     error,
@@ -14,26 +13,28 @@ export function SignMessage() {
   const [recoveredAddress, setRecoveredAddress] = React.useState("");
 
   React.useEffect(() => {
-    (async () => {
+    const fetchRecoveredAddress = async () => {
       if (variables?.message && signMessageData) {
-        const recoveredAddress = await recoverMessageAddress({
+        const recoveredAddr = await recoverMessageAddress({
           message: variables?.message,
           signature: signMessageData,
         });
-        setRecoveredAddress(recoveredAddress);
+        setRecoveredAddress(recoveredAddr);
       }
-    })();
+    };
+
+    fetchRecoveredAddress();
   }, [signMessageData, variables?.message]);
 
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.target as HTMLFormElement);
+    const message = formData.get("message") as SignableMessage;
+    signMessage({ message });
+  };
+
   return (
-    <form
-      onSubmit={(event) => {
-        event.preventDefault();
-        const formData = new FormData(event.target as HTMLFormElement);
-        const message = formData.get("message");
-        signMessage({ message: message as SignableMessage });
-      }}
-    >
+    <form onSubmit={handleSubmit}>
       <label htmlFor="message">Enter a message to sign</label>
       <textarea
         id="message"
@@ -41,7 +42,7 @@ export function SignMessage() {
         placeholder="The quick brown fox…"
       />
       <button disabled={isPending}>
-        {isPending ? "Check Wallet" : "Sign Message"}
+        {isPending ? "Checking Wallet" : "Sign Message"}
       </button>
 
       {signMessageData && (
