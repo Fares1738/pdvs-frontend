@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useSignMessage } from "wagmi";
-import { recoverMessageAddress } from "viem";
+import { recoverMessageAddress, SignableMessage } from "viem";
 
 export function SignMessage() {
   //   const recoveredAddress = React.useRef<string>();
@@ -29,9 +29,9 @@ export function SignMessage() {
     <form
       onSubmit={(event) => {
         event.preventDefault();
-        const formData = new FormData(event.target);
+        const formData = new FormData(event.target as HTMLFormElement);
         const message = formData.get("message");
-        signMessage({ message });
+        signMessage({ message: message as SignableMessage });
       }}
     >
       <label htmlFor="message">Enter a message to sign</label>

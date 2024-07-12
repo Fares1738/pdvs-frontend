@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vikingsSC
+spec:
+  selector:
+    matchLabels:
+      app: vikingsSC
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: vikingsSC
+    spec:
+      containers:
+      - name: vikingsSC
+        image: fares223/vikingssc
+        imagePullPolicy: ifNotPresent
+        ports:
+        - containerPort: 3000
