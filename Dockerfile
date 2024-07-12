@@ -10,8 +10,8 @@ WORKDIR /app
 # Copy package.json and package-lock.json to the working directory
 COPY package.json package-lock.json ./
 
-# Install dependencies
-RUN npm cache clean --force && npm install --legacy-peer-deps
+# Install dependencies, ignoring errors
+RUN npm cache clean --force && npm install --legacy-peer-deps --ignore-errors
 
 # Copy the rest of your application code
 COPY . .
