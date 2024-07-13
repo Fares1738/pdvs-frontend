@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: vikingsSC
+  name: vikings-service
 spec:
-type: LoadBalancer
-selector:
-  app: vikingsSC
-ports:
-- protocol: TCP
-  port: 8080
-  targetPort: 8080
+  selector:
+    app: vikings
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+  type: LoadBalancer 
