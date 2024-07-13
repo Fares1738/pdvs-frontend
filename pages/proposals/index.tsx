@@ -122,14 +122,14 @@ export default function Proposals({ _proposals }: { _proposals: string }) {
                           <EditIcon />
                         </IconButton>
                       )}
-                      {p.status === "Published" && p.proposalIdHash && (
+                      {/* {p.status === "Published" && p.proposalIdHash && (
                         <IconButton
                           href={`https://testnet.snapshot.org/#/persaka.eth/proposal/${p.proposalIdHash}`}
                           target="_blank"
                         >
                           <OpenInNewIcon />
                         </IconButton>
-                      )}
+                      )} */}
                     </Box>
                     <Typography
                       sx={{
