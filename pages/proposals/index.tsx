@@ -15,11 +15,16 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { getProposals } from "../../prisma/operations/proposals/read";
 import { formatTime, getProposalColor, stringify } from "@/utils/utils";
-import { Proposal } from "@prisma/client"; // Update as per your Prisma model
+import { Proposal as PrismaProposal } from "@prisma/client";
 import { useAccount } from "wagmi";
 import { useSession } from "next-auth/react";
 import { useAuth } from "@/hooks/useAuth";
 import { useUser } from "@/hooks/useUser";
+
+// Extended Proposal type to include the optional proposalIdHash
+interface ExtendedProposal extends PrismaProposal {
+  proposalIdHash: string;
+}
 
 export const getServerSideProps = async () => {
   const proposals = await getProposals();
@@ -27,24 +32,25 @@ export const getServerSideProps = async () => {
   return { props: { _proposals: stringify(proposals) } };
 };
 
-export default function Proposals({ _proposals }: { _proposals: any }) {
+export default function Proposals({ _proposals }: { _proposals: string }) {
   const { address, isConnected } = useAccount();
   const { status } = useSession();
   const { isAuth } = useAuth();
 
   const { userType, isAdminOrCM } = useUser();
 
-  const [proposals, setProposals] = useState<Proposal[]>(JSON.parse(_proposals));
+  const [proposals, setProposals] = useState<ExtendedProposal[]>(JSON.parse(_proposals));
   const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
-    if (searchText === "") setProposals(JSON.parse(_proposals));
-    else {
+    if (searchText === "") {
+      setProposals(JSON.parse(_proposals));
+    } else {
       setProposals(
-        proposals.filter((p) => p.title.toLowerCase().includes(searchText))
+        proposals.filter((p) => p.title.toLowerCase().includes(searchText.toLowerCase()))
       );
     }
-  }, [searchText, _proposals, proposals]);
+  }, [searchText, _proposals]);
 
   return (
     <main>
@@ -116,9 +122,9 @@ export default function Proposals({ _proposals }: { _proposals: any }) {
                           <EditIcon />
                         </IconButton>
                       )}
-                      {p.status === "Published" && (
+                      {p.status === "Published" && p.proposalIdHash && (
                         <IconButton
-                          href={"https://testnet.snapshot.org/#/persaka.eth/proposal/" + p.proposalIdHash}
+                          href={`https://testnet.snapshot.org/#/persaka.eth/proposal/${p.proposalIdHash}`}
                           target="_blank"
                         >
                           <OpenInNewIcon />
