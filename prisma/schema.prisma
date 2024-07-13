@@ -5,7 +5,7 @@ generator client {
 
 datasource db {
   provider     = "mongodb"
-  url          = "mongodb+srv://ADMIN:qwQ2D19F2j2hNFNG@cluster0.xnsjfsi.mongodb.net/SCPROJECT?retryWrites=true&w=majority&appName=Cluster0"
+  url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
 
@@ -40,4 +40,11 @@ model User {
   matricNumber String @unique
   userAddress  String @unique
   userType     String
+    Published
+}
+
+enum UserType {
+    STUDENT
+    CM
+    ADMIN
 }
