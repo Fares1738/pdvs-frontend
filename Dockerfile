@@ -1,7 +1,5 @@
 FROM node
 
-RUN apk add --no-cache git
-
 WORKDIR /app
 
 COPY package.json package-lock.json ./
