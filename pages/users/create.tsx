@@ -24,7 +24,7 @@ const defaultValue = {
 } as VariableState;
 
 type varKeys = "address" | "matricNumber" | "cgpa" | "userType";
-const userTypes = ["STUDENT", "CM"];
+const userTypes: UserType[] = [UserType.STUDENT, UserType.CM];
 type VarKeys = {
   address: VariableState;
   matricNumber: VariableState;
@@ -42,38 +42,36 @@ export default function Home() {
     matricNumber: defaultValue,
     cgpa: defaultValue,
     userType: {
-      value: "STUDENT",
+      value: UserType.STUDENT,
       errorMsg: undefined,
     },
     fullName: defaultValue,
   });
 
-  const handleRegistration = (e: any) => {
+  const handleRegistration = (e: React.FormEvent) => {
     e.preventDefault();
   };
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     let validation = false;
     let errorMsg: string | undefined = undefined;
     switch (name) {
       case "address":
-        validation = isAddress(value); // TODO
+        validation = isAddress(value);
         if (!validation) errorMsg = "Invalid address!";
         break;
       case "fullName":
         validation = true;
         break;
       case "matricNumber":
-        validation = true; // TODO
-        // if () errorMsg = "" ;
+        validation = true; // TODO: Implement proper validation
         break;
       case "cgpa":
-        validation = true; // TODO
-        // if () errorMsg = "" ;
+        validation = true; // TODO: Implement proper validation
         break;
       case "userType":
-        validation = userTypes.includes(value); // TODO
+        validation = Object.values(UserType).includes(value as UserType);
         if (!validation) errorMsg = "Invalid UserType";
         break;
       default:
@@ -111,6 +109,7 @@ export default function Home() {
       "create user"
     );
   }
+
   return (
     <main>
       <NavBar />
@@ -149,7 +148,7 @@ export default function Home() {
 
               <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2">
-                  Addresss
+                  Address
                 </label>
                 <input
                   onChange={handleChange}
@@ -230,7 +229,7 @@ export default function Home() {
                     <div key={i} className="inline-flex items-center">
                       <label
                         className="relative flex items-center p-3 rounded-full cursor-pointer"
-                        htmlFor="html"
+                        htmlFor={o}
                       >
                         <input
                           onChange={handleChange}
@@ -239,7 +238,7 @@ export default function Home() {
                           type="radio"
                           value={o}
                           className="before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-full border border-blue-gray-200 text-gray-900 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-blue-gray-500 before:opacity-0 before:transition-opacity checked:border-gray-900 checked:before:bg-gray-900 hover:before:opacity-10"
-                          id="html"
+                          id={o}
                         />
                         <span className="absolute text-gray-900 transition-opacity opacity-0 pointer-events-none top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 peer-checked:opacity-100">
                           <svg
@@ -258,8 +257,8 @@ export default function Home() {
                         </span>
                       </label>
                       <label
-                        className="mt-px  cursor-pointer select-none text-gray-700 text-sm font-bold"
-                        htmlFor="html"
+                        className="mt-px cursor-pointer select-none text-gray-700 text-sm font-bold"
+                        htmlFor={o}
                       >
                         {o}
                       </label>

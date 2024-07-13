@@ -5,7 +5,7 @@ generator client {
 
 datasource db {
   provider     = "mongodb"
-  url          = "mongodb+srv://ADMIN:qwQ2D19F2j2hNFNG@cluster0.xnsjfsi.mongodb.net/SCPROJECT?retryWrites=true&w=majority&appName=Cluster0"
+  url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
 
@@ -29,21 +29,26 @@ model Proposal {
   content             String
   createdAt           DateTime @db.Date
   likesCount          Int
-  status              String
+  status              ProposalStatus
   title               String
 }
 
 model User {
-  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
   cgpa         Int
   fullName     String
-  matricNumber String    @unique
-  userAddress  String    @unique
-  userType     UserType  // Assuming UserType is an enum defined separately
+  matricNumber String   @unique
+  userAddress  String   @unique
+  userType     UserType
 }
 
 enum UserType {
   STUDENT
   CM
   ADMIN
+}
+
+enum ProposalStatus {
+  DRAFT
+  PUBLISHED
 }
