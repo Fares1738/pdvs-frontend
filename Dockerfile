@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node
 
 RUN apk add --no-cache git
 
@@ -14,6 +14,10 @@ RUN npm cache clean --force && npm install --legacy-peer-deps --ignore-scripts -
 RUN npm install -g next
 
 COPY . .
+
+RUN npx prisma db pull --force
+
+RUN npx prisma generate
 
 RUN npm run build
 

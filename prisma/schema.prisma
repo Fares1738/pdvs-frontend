@@ -1,68 +1,43 @@
-datasource db {
-    provider     = "mongodb"
-    url          = env("DATABASE_URL")
-    relationMode = "prisma"
-}
-
 generator client {
-    provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-1.0.x"]
 }
 
-model User {
-    id             String           @id @default(auto()) @map("_id") @db.ObjectId
-    userType       UserType
-    userAddress    String           @unique
-    matricNumber   String           @unique
-    cgpa           Int
-    fullName       String
-    likedProposals LikedProposals[]
-    comments       Comment[]
-}
-
-model Proposal {
-    id                  String           @id @default(auto()) @map("_id") @db.ObjectId
-    title               String
-    content             String
-    likesCount          Int
-    createdAt           DateTime
-    blockNumberSnapshot BigInt?
-    snapshotProposalId  String?
-    proposalIdHash      String?
-    proposalIpfs        String?
-    status              ProposalStatus
-    LikedProposals      LikedProposals[]
-    comments            Comment[]
-}
-
-model LikedProposals {
-    id         String   @id @default(auto()) @map("_id") @db.ObjectId
-    User       User     @relation(fields: [userId], references: [id])
-    proposal   Proposal @relation(fields: [proposalId], references: [id])
-    userId     String   @db.ObjectId
-    proposalId String   @db.ObjectId
+datasource db {
+  provider     = "mongodb"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model Comment {
-    id         String    @id @default(auto()) @map("_id") @db.ObjectId
-    content    String
-    createdAt  DateTime
-    author     User      @relation(fields: [authorId], references: [id])
-    authorId   String    @db.ObjectId
-    proposal   Proposal  @relation(fields: [proposalId], references: [id])
-    proposalId String    @db.ObjectId
-    parent     Comment?  @relation("CommentToComment", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-    parentId   String?   @db.ObjectId
-    Comment    Comment[] @relation("CommentToComment")
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  authorId   String   @db.ObjectId
+  content    String
+  createdAt  DateTime @db.Date
+  proposalId String   @db.ObjectId
 }
 
-enum ProposalStatus {
-    Draft
-    Active
-    Published
+model LikedProposals {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  proposalId String @db.ObjectId
+  userId     String @db.ObjectId
 }
 
-enum UserType {
-    STUDENT
-    CM
-    ADMIN
+model Proposal {
+  id                  String   @id @default(auto()) @map("_id") @db.ObjectId
+  blockNumberSnapshot BigInt?
+  content             String
+  createdAt           DateTime @db.Date
+  likesCount          Int
+  status              String
+  title               String
+}
+
+model User {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  cgpa         Int
+  fullName     String
+  matricNumber String @unique
+  userAddress  String @unique
+  userType     String
 }
