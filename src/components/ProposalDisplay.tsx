@@ -167,7 +167,7 @@ const ProposalDisplay = ({
             >
               <Like />
 
-              <IconButton
+              {/* <IconButton
                 href={
                   "https://testnet.snapshot.org/#/persaka.eth/proposal/" +
                   proposal.proposalIdHash
@@ -175,7 +175,7 @@ const ProposalDisplay = ({
                 target="_blank"
               >
                 <OpenInNewIcon />
-              </IconButton>
+              </IconButton> */}
 
               <Typography
                 sx={{
