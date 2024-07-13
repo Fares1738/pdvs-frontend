@@ -1,5 +1,3 @@
-// "use client";
-
 import styles from "../../styles/page.module.css";
 import NavBar from "@/components/NavBar";
 import {
@@ -17,7 +15,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { getProposals } from "../../prisma/operations/proposals/read";
 import { formatTime, getProposalColor, stringify } from "@/utils/utils";
-import { Proposal } from "@prisma/client";
+import { Proposal } from "@prisma/client"; // Update as per your Prisma model
 import { useAccount } from "wagmi";
 import { useSession } from "next-auth/react";
 import { useAuth } from "@/hooks/useAuth";
@@ -36,15 +34,12 @@ export default function Proposals({ _proposals }: { _proposals: any }) {
 
   const { userType, isAdminOrCM } = useUser();
 
-  const [proposals, setProposals] = useState<Proposal[]>(
-    JSON.parse(_proposals)
-  );
+  const [proposals, setProposals] = useState<Proposal[]>(JSON.parse(_proposals));
   const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     if (searchText === "") setProposals(JSON.parse(_proposals));
     else {
-      //
       setProposals(
         proposals.filter((p) => p.title.toLowerCase().includes(searchText))
       );
@@ -82,14 +77,11 @@ export default function Proposals({ _proposals }: { _proposals: any }) {
           label="Search Proposal"
           variant="outlined"
           value={searchText}
-          onChange={(e) => {
-            //
-            setSearchText(e.target.value);
-          }}
+          onChange={(e) => setSearchText(e.target.value)}
         />
         <List>
-          {proposals.map((p, i) => {
-            return !(!isAdminOrCM && p.status === "Draft") ? (
+          {proposals.map((p, i) => (
+            !(!isAdminOrCM && p.status === "Draft") && (
               <ListItem
                 sx={{
                   border: "3px black solid",
@@ -104,7 +96,6 @@ export default function Proposals({ _proposals }: { _proposals: any }) {
                     display: "flex",
                     flexDirection: "column",
                     width: 600,
-                    // maxWidth: 900,
                     minHeight: 150,
                   }}
                 >
@@ -117,35 +108,23 @@ export default function Proposals({ _proposals }: { _proposals: any }) {
                     }}
                   >
                     <Box>
-                      {/* Actions */}
-                      <IconButton
-                        href={"/proposals/view/" + p.id}
-                        target="blank"
-                      >
+                      <IconButton href={"/proposals/view/" + p.id} target="_blank">
                         <VisibilityIcon />
                       </IconButton>
                       {isConnected && isAdminOrCM && p.status === "Draft" && (
-                        <IconButton
-                          href={"/proposals/edit/" + p.id}
-                          target="blank"
-                        >
+                        <IconButton href={"/proposals/edit/" + p.id} target="_blank">
                           <EditIcon />
                         </IconButton>
                       )}
-
                       {p.status === "Published" && (
                         <IconButton
-                          href={
-                            "https://testnet.snapshot.org/#/persaka.eth/proposal/" +
-                            p.proposalIdHash
-                          }
+                          href={"https://testnet.snapshot.org/#/persaka.eth/proposal/" + p.proposalIdHash}
                           target="_blank"
                         >
                           <OpenInNewIcon />
                         </IconButton>
                       )}
                     </Box>
-
                     <Typography
                       sx={{
                         color: "white",
@@ -166,12 +145,9 @@ export default function Proposals({ _proposals }: { _proposals: any }) {
                       {p.title}
                     </Typography>
                     <Typography variant="body2">
-                      {p.content.length > 120
-                        ? p.content.substring(0, 120) + "..."
-                        : p.content}
+                      {p.content.length > 120 ? p.content.substring(0, 120) + "..." : p.content}
                     </Typography>
                   </Box>
-
                   <Typography
                     sx={{
                       background: "gray",
@@ -180,17 +156,14 @@ export default function Proposals({ _proposals }: { _proposals: any }) {
                       textAlign: "center",
                       borderRadius: 4,
                     }}
-                    // sx={{ position: "absolute", bottom: 0, right: 0, p: 2 }}
                     variant="body2"
                   >
                     {formatTime(new Date(p.createdAt))}
                   </Typography>
                 </Box>
               </ListItem>
-            ) : (
-              <></>
-            );
-          })}
+            )
+          ))}
         </List>
       </Box>
     </main>
