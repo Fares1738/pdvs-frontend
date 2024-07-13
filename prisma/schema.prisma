@@ -34,31 +34,16 @@ model Proposal {
 }
 
 model User {
-  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
   cgpa         Int
   fullName     String
-  matricNumber String @unique
-  userAddress  String @unique
-  userType     String
-    Published
+  matricNumber String    @unique
+  userAddress  String    @unique
+  userType     UserType  // Assuming UserType is an enum defined separately
 }
 
 enum UserType {
-    STUDENT
-    CM
-    ADMIN
-    Published
-}
-
-enum UserType {
-    STUDENT
-    CM
-    ADMIN
-    Published
-}
-
-enum UserType {
-    STUDENT
-    CM
-    ADMIN
+  STUDENT
+  CM
+  ADMIN
 }
